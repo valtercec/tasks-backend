@@ -13,26 +13,6 @@ pipeline {
 				bat 'mvn test'
 			}
 		}
-
-		stage ('Sonar Analysis') {
-			environment {
-				scannerHome = tool 'SONAR_SCANER'
-			}
-			steps {
-				withSonarQubeEnv('SONAR_LOCAL') {
-					bat "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://localhost:9000 -Dsonar.login=64ea7dc40f141cb53d513e4a06521535070b40af -Dsonar.java.binaries=target -Dsonar.coverage.exclusions=**/.mvn/**,**/src/test/**,**/model/**,**Application.java"
-				}
-			}
-		}
-		
-		stage ('Quality Gate') {
-			steps {
-				sleep(10)
-				timeout(time: 1, unit: 'MINUTES'){
-					waitForQualityGate abortPipeline: true
-				}
-			}
-		}
 		
 		stage ('Deploy Backend') {
 			steps {
