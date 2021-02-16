@@ -77,7 +77,7 @@ pipeline {
 		
 		stage ('Health Ceck') {
 			steps {
-				sleep(5)
+				sleep(15)
 				dir('functional-test'){
 					bat 'mvn verify -Dskip.surefire.tests'
 				}
