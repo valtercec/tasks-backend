@@ -23,7 +23,7 @@ pipeline {
 		stage ('API Test') {
 			steps {
 				dir('api-test'){
-					git credentialsId: 'github_login', url: 'https://github.com/valtercec/tasks-api-test'
+					git credentialsId: 'LoginGit', url: 'https://github.com/valtercec/tasks-api-test'
 					sh 'mvn test'
 				}
 			}
@@ -32,7 +32,7 @@ pipeline {
 		stage ('Deploy Frontend') {
 			steps {
 				dir('frontend'){
-					git credentialsId: 'github_login', url: 'https://github.com/valtercec/tasks-frontend'
+					git credentialsId: 'LoginGit', url: 'https://github.com/valtercec/tasks-frontend'
 					sh 'mvn clean package'
 					deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001')], contextPath: 'tasks', war: 'target/tasks.war'
 				}
@@ -42,7 +42,7 @@ pipeline {
 		stage ('Functional Test') {
 			steps {
 				dir('functional-test'){
-					git credentialsId: 'github_login', url: 'https://github.com/valtercec/tasks-functional-tests'
+					git credentialsId: 'LoginGit', url: 'https://github.com/valtercec/tasks-functional-tests'
 					sh 'mvn test'
 				}
 			}
