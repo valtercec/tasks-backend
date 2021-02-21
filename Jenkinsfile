@@ -4,13 +4,13 @@ pipeline {
 
 		stage ('Build Backend') {
 			steps {
-				bat 'mvn clean package -DskipTests=true'
+				sh 'mvn clean package -DskipTests=true'
 			}
 		}
 
 		stage ('Unit Tests') {
 			steps {
-				bat 'mvn test'
+				sh 'mvn test'
 			}
 		}
 		
@@ -24,7 +24,7 @@ pipeline {
 			steps {
 				dir('api-test'){
 					git credentialsId: 'github_login', url: 'https://github.com/valtercec/tasks-api-test'
-					bat 'mvn test'
+					sh 'mvn test'
 				}
 			}
 		}
@@ -33,7 +33,7 @@ pipeline {
 			steps {
 				dir('frontend'){
 					git credentialsId: 'github_login', url: 'https://github.com/valtercec/tasks-frontend'
-					bat 'mvn clean package'
+					sh 'mvn clean package'
 					deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001')], contextPath: 'tasks', war: 'target/tasks.war'
 				}
 			}
@@ -43,15 +43,15 @@ pipeline {
 			steps {
 				dir('functional-test'){
 					git credentialsId: 'github_login', url: 'https://github.com/valtercec/tasks-functional-tests'
-					bat 'mvn test'
+					sh 'mvn test'
 				}
 			}
 		}
 		
 		stage ('Deploy Prod') {
 			steps {
-				bat 'docker-compose build'
-				bat 'docker-compose up -d'
+				sh 'docker-compose build'
+				sh 'docker-compose up -d'
 			}
 		}
 		
@@ -59,7 +59,7 @@ pipeline {
 			steps {
 				sleep(15)
 				dir('functional-test'){
-					bat 'mvn verify -Dskip.surefire.tests'
+					sh 'mvn verify -Dskip.surefire.tests'
 				}
 			}
 		}
